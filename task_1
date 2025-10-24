@@ -1,0 +1,12 @@
+-- 1. Вывести количество фильмов в каждой категории, отсортированное по убыванию.
+SELECT 
+    c.name AS category_name,
+    COUNT(fc.film_id) AS movie_count
+FROM 
+    category c
+JOIN 
+    film_category fc ON c.category_id = fc.category_id
+GROUP BY 
+    c.category_id, c.name
+ORDER BY 
+    movie_count DESC;
