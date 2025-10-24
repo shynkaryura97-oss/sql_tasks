@@ -1,0 +1,87 @@
+-- 7. Вывести категорию фильмов с наибольшим количеством суммарных часов аренды в городе 
+-- (customer.address_id в этом городе), которые начинаются с буквы "a". 
+-- Сделать то же самое для городов, которые содержат "-" в названии. Все в одном запросе.
+WITH city_category_rentals AS (
+    -- Для городов, начинающихся с 'a'
+    SELECT 
+        ci.city_id,
+        ci.city,
+        c.category_id,
+        cat.name AS category_name,
+        SUM(EXTRACT(EPOCH FROM (r.return_date - r.rental_date)) / 3600) AS total_rental_hours,
+        'cities_starting_with_a' AS city_type
+    FROM 
+        city ci
+    JOIN 
+        address a ON ci.city_id = a.city_id
+    JOIN 
+        customer cust ON a.address_id = cust.address_id
+    JOIN 
+        rental r ON cust.customer_id = r.customer_id
+    JOIN 
+        inventory i ON r.inventory_id = i.inventory_id
+    JOIN 
+        film_category c ON i.film_id = c.film_id
+    JOIN 
+        category cat ON c.category_id = cat.category_id
+    WHERE 
+        ci.city LIKE 'a%'
+    GROUP BY 
+        ci.city_id, ci.city, c.category_id, cat.name
+    
+    UNION ALL
+    
+    -- Для городов, содержащих '-'
+    SELECT 
+        ci.city_id,
+        ci.city,
+        c.category_id,
+        cat.name AS category_name,
+        SUM(EXTRACT(EPOCH FROM (r.return_date - r.rental_date)) / 3600) AS total_rental_hours,
+        'cities_with_hyphen' AS city_type
+    FROM 
+        city ci
+    JOIN 
+        address a ON ci.city_id = a.city_id
+    JOIN 
+        customer cust ON a.address_id = cust.address_id
+    JOIN 
+        rental r ON cust.customer_id = r.customer_id
+    JOIN 
+        inventory i ON r.inventory_id = i.inventory_id
+    JOIN 
+        film_category c ON i.film_id = c.film_id
+    JOIN 
+        category cat ON c.category_id = cat.category_id
+    WHERE 
+        ci.city LIKE '%-%'
+    GROUP BY 
+        ci.city_id, ci.city, c.category_id, cat.name
+),
+ranked_categories AS (
+    SELECT 
+        city_type,
+        city_id,
+        city,
+        category_id,
+        category_name,
+        total_rental_hours,
+        RANK() OVER (PARTITION BY city_type, city_id ORDER BY total_rental_hours DESC) as rank
+    FROM 
+        city_category_rentals
+    WHERE 
+        total_rental_hours IS NOT NULL
+)
+SELECT 
+    city_type,
+    city_id,
+    city,
+    category_id,
+    category_name,
+    total_rental_hours
+FROM 
+    ranked_categories
+WHERE 
+    rank = 1
+ORDER BY 
+    city_type, city_id;
