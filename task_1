@@ -1,4 +1,4 @@
-```sql
+-- task_1.sql
 -- 1. Вывести количество фильмов в каждой категории, отсортированное по убыванию.
 SELECT 
     c.name AS category_name,
@@ -11,4 +11,4 @@ GROUP BY
     c.category_id, c.name
 ORDER BY 
     movie_count DESC;
-```
+
