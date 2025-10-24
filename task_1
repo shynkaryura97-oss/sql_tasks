@@ -1,3 +1,4 @@
+*.sql linguist-language=SQL
 -- 1. Вывести количество фильмов в каждой категории, отсортированное по убыванию.
 SELECT 
     c.name AS category_name,
