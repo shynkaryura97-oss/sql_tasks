@@ -1,4 +1,3 @@
-```sql
 -- 5. Вывести топ-3 актеров, которые чаще всего появлялись в фильмах категории "Children". 
 -- Если несколько актеров имеют одинаковое количество фильмов, вывести всех.
 WITH actor_children_counts AS (
@@ -32,4 +31,3 @@ WHERE
     rank <= 3
 ORDER BY 
     children_movie_count DESC, actor_id;
-```
