@@ -1,4 +1,3 @@
-```sql
 -- 4. Вывести названия фильмов, которых нет в инвентаре. Запрос без использования оператора IN.
 SELECT 
     f.film_id,
@@ -9,4 +8,3 @@ LEFT JOIN
     inventory i ON f.film_id = i.film_id
 WHERE 
     i.inventory_id IS NULL;
-```
