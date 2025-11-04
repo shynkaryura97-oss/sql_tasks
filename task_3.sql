@@ -1,4 +1,3 @@
-```sql
 -- 3. Вывести категорию фильмов, на которую потратили больше всего денег.
 SELECT 
     c.name AS category_name,
@@ -20,4 +19,3 @@ GROUP BY
 ORDER BY 
     total_amount_spent DESC
 LIMIT 1;
-```
