@@ -1,4 +1,3 @@
-```sql
 -- 6. Вывести города с количеством активных и неактивных клиентов (active - customer.active = 1). 
 -- Сортировать по количеству неактивных клиентов в порядке убывания.
 SELECT 
@@ -16,4 +15,3 @@ GROUP BY
     ci.city_id, ci.city
 ORDER BY 
     inactive_customers DESC;
-```
